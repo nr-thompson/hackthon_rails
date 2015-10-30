@@ -1,11 +1,6 @@
 /*Remember to check lengths and query amounts*/
 $(document).ready(function(){
-	$( "#interest" ).click(function(){
-		//grabs rankings of each category
-		var ranking = create_search_array();
-		//sends each category to be searched
-		getResults(ranking,current_location);
-	});	
+	
 	//sends a different search obj depending on the ctegory. callback is sent to getAllDistances
 	function getResults(ranking,current_location){
 		var results = [];
@@ -170,29 +165,10 @@ $(document).ready(function(){
 
 				switch (arr[i][j].category){
 					case "food":
-
-					//block
-						break;
-					case "culture":
-						break;
-					case "shopping":
-					//block
-						break;
-					case "health":
-					//block
-						break;
-					case "transportation":
-					//block
-						break;
-					case "nightlife":
-					//block
-
 						sums.food[0] += distanceVal(arr[i][j].distance)
 						if(!sums.food[1]){
 							sums.food.push(arr[i][j].rank)
 						}
-					
-
 						break;
 					case "culture":
 						sums.culture[0] += distanceVal(arr[i][j].distance)
@@ -253,7 +229,7 @@ $(document).ready(function(){
 			}
 		}
 		total = Math.round(total);
-
+		showScore(total);
 	}
 
 
@@ -286,11 +262,11 @@ $(document).ready(function(){
 	var current_location;
 
 	var input = document.getElementById('pac-input'); //$('#pac-input').val()
-	var autocomplete = new google.maps.places.Autocomplete(input)
+	autocomplete = new google.maps.places.Autocomplete(input)
 	autocomplete.bindTo('bounds', map);
 
-	var infowindow = new google.maps.InfoWindow();
-	var marker = new google.maps.Marker({
+	infowindow = new google.maps.InfoWindow();
+	marker = new google.maps.Marker({
 		map: map,
 		draggable: true,
 		anchorPoint: new google.maps.Point(0, -29)
@@ -308,41 +284,54 @@ $(document).ready(function(){
 
 
 
-    if (!place.geometry) {
-		window.alert("Autocomplete's returned place contains no geometry");
-		return;
-    }
+	    if (!place.geometry) {
+			window.alert("Autocomplete's returned place contains no geometry");
+			return;
+	    }
 
-    // If the place has a geometry, then present it on a map.
-	if (place.geometry.viewport) {
-		map.fitBounds(place.geometry.viewport);
-	} else {
-		map.setCenter(place.geometry.location);
-		map.setZoom(13);  // Why 13? Because it looks good.
-	}
-	marker.setIcon(/** @type {google.maps.Icon} */({
-		url: "http://content.sportslogos.net/logos/6/235/full/5gzur7f6x09cv61jt16smhopl.gif", 
-		size: new google.maps.Size(71, 71),
-		origin: new google.maps.Point(0, 0),
-		anchor: new google.maps.Point(17, 34),
-		scaledSize: new google.maps.Size(35, 35)
-	}));
+	    // If the place has a geometry, then present it on a map.
+		if (place.geometry.viewport) {
+			map.fitBounds(place.geometry.viewport);
+		} else {
+			map.setCenter(place.geometry.location);
+			map.setZoom(13);  // Why 13? Because it looks good.
+		}
+		marker.setIcon(/** @type {google.maps.Icon} */({
+			url: "http://content.sportslogos.net/logos/6/235/full/5gzur7f6x09cv61jt16smhopl.gif", 
+			size: new google.maps.Size(71, 71),
+			origin: new google.maps.Point(0, 0),
+			anchor: new google.maps.Point(17, 34),
+			scaledSize: new google.maps.Size(35, 35)
+		}));
 
-    marker.setPosition(place.geometry.location);
-    marker.setVisible(true);
+	    marker.setPosition(place.geometry.location);
+	    marker.setVisible(true);
 
-    var address = '';
-    if (place.address_components) {
-      address = [
-        (place.address_components[0] && place.address_components[0].short_name || ''),
-        (place.address_components[1] && place.address_components[1].short_name || ''),
-        (place.address_components[2] && place.address_components[2].short_name || '')
-      ].join(' ');
-    }
+	    var address = '';
+	    if (place.address_components) {
+	      address = [
+	        (place.address_components[0] && place.address_components[0].short_name || ''),
+	        (place.address_components[1] && place.address_components[1].short_name || ''),
+	        (place.address_components[2] && place.address_components[2].short_name || '')
+	      ].join(' ');
+	    }
 
-    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address + '<br>' + '<strong>' +  "Latitude: " + '</strong>' + latitude + '<strong>' +  "  Longitude:  " + '</strong>' +longitude)
-    infowindow.open(map, marker);
-  });
+	    // infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address + '<br>' + '<strong>' +  "Latitude: " + '</strong>' + latitude + '<strong>' +  "  Longitude:  " + '</strong>' +longitude)
+	    // infowindow.open(map, marker);
+	    $( "#interest" ).click(function(){
+			//grabs rankings of each category
+			var ranking = create_search_array();
+			//sends each category to be searched
+			getResults(ranking,current_location);
+			// infowindow.open(map, marker);
+
+		});	
+		
+    });
+	function showScore(score){
+			infowindow.open(map, marker);
+			infowindow.setContent("<h1>"+score+"</h1>")
+		}
 
 });
 
@@ -350,7 +339,9 @@ var map;
 var service;
 var geocorder;
 var matrix;
-
+var maker;
+var autocomplete;
+var infowindow
 
 //initializes map
 function initialize(){
@@ -406,25 +397,6 @@ function create_search_array(){
 
 
 function performSearch(text_request, rank, category, callback){
-	//Location box should be dynamic and set based on the users location or input
-	// var locationBox = 
-
-	//Search obj for gMaps text search
-	// text_request = {
-	// 	query: "izakaya japanese food",
-	// 	location: coords,
-	// 	radius: 1000,
-	// 	types: ["restaurant","bar","food"]
-	// }
-	// radar_request = {
-	// 	keyword: "izakaya japanese food",
-	// 	location: locationBox,
-	// 	radius: 1000,
-	// 	types: ["restaurant","bar","food"]
-	// }
-	// service.textSearch(text_request,latLngArr)
-
-
 	service.textSearch(text_request, function(results,status){
 		var searchResults =[];
 		if(status == google.maps.places.PlacesServiceStatus.OK){
@@ -455,18 +427,12 @@ function getDistance(arr,origin,callback){
 		destinationArr.push(new google.maps.LatLng(arr[i].lat,arr[i].lng));
 	};
 
-
 	//gMaps Method to Calculate distance between 2 coordinates
 	matrix.getDistanceMatrix({
 		origins: [origin],
 		destinations: destinationArr,
 		unitSystem: google.maps.UnitSystem.IMPERIAL,
 		travelMode: google.maps.TravelMode.WALKING,
-		// :::: Other optional parameters to add to search ::::
-	    // transitOptions: TransitOptions,
-	    // durationInTraffic: true,
-	    // avoidHighways: false,
-	    // avoidTolls: false,
 	},function(response,status){
 		if (status == google.maps.DistanceMatrixStatus.OK) {
 			//there is only one origin point so we hard code the first element into var results
