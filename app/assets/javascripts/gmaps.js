@@ -1,33 +1,12 @@
 /*Remember to check lengths and query amounts*/
-
-
 $(document).ready(function(){
-	
-	//When submit button is clicked,we 
 	$( "#interest" ).click(function(){
+		//grabs rankings of each category
 		var ranking = create_search_array();
-		// console.log(ranking)
+		//sends each category to be searched
 		getResults(ranking,current_location);
 	});	
-	function getAllDistances(results){
-		console.log(results)
-		var distanceArr = [];
-		for(var i = 0;i<results.length;i++){
-			getDistance(results[i],current_location,function(params){
-				distanceArr.push(params)
-				if(distanceArr.length == 1){
-					testing(distanceArr);
-				}
-			})
-		}
-	}
-
-	function testing(results){
-		console.log(results)
-	}
-	
-	
-
+	//sends a different search obj depending on the ctegory. callback is sent to getAllDistances
 	function getResults(ranking,current_location){
 		var results = [];
 		for (var i = 0;i<1/*ranking.length*/;i++){
@@ -39,7 +18,8 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["restaurant"],
 					}
-					performSearch(searchObj,function(params){
+					performSearch(searchObj,(i+1),function(params){
+						console.log(params)
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -54,7 +34,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["museum"],
 					}
-					performSearch(searchObj,function(params){
+					performSearch(searchObj,(i+1),function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -69,7 +49,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["shopping_mall"],
 					}
-					performSearch(searchObj,function(params){
+					performSearch(searchObj,(i+1),function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -84,7 +64,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["park"],
 					}
-					performSearch(searchObj,function(params){
+					performSearch(searchObj,(i+1),function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -99,7 +79,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["bus_station"],
 					}
-					performSearch(searchObj,function(params){
+					performSearch(searchObj,(i+1),function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -114,7 +94,7 @@ $(document).ready(function(){
 						radius:1000,
 						types:["night_club"],
 					}
-					performSearch(searchObj,function(params){
+					performSearch(searchObj,(i+1),function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -129,7 +109,7 @@ $(document).ready(function(){
 						radius:1000,
 						types:["church"],
 					}
-					performSearch(searchObj,function(params){
+					performSearch(searchObj,(i+1),function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -141,18 +121,49 @@ $(document).ready(function(){
 			}
 		}
 	}
+
+	//Sends arrays to  distance matrix and adds 'distance' key to each search result.
+	//Callback sent to remove_far to remove all distances greater than 5 miles or 8000meters
+	function getAllDistances(results){
+		// console.log(results)
+		var distanceArr = [];
+		for(var i = 0;i<results.length;i++){
+			getDistance(results[i],current_location,function(params){
+				distanceArr.push(params)
+				if(distanceArr.length == 1){
+					remove_far(distanceArr);
+				}
+			})
+		}
+	}
 	
-	// $('.test').on('click',function(){
-	// 	var coordArr; 		
-	// 	performSearch(current_location, function(param){
-	// 		coordArr = param;
-	// 		var algoArr;
-	// 		getDistance(coordArr,current_location,function(param){
-	// 			algoArr = param
-	// 			console.log(algoArr)
-	// 		})
-	// 	});
-	// });
+	//filters results further than 5miles or 8000 meters
+	function remove_far(results){
+		var filtered = [];
+		for(var i = 0;i<results.length;i++){
+			var temp = [];
+			for(var j=0;j<results[i].length;j++){
+				if(results[i][j].distance <= 8000){
+					temp.push(results[i][j]);
+				}
+			}
+			filtered.push(temp);
+		}
+		calculateScore(filtered)
+	}
+
+	function calculateScore(arr){
+		var range1;
+		var range2;
+		var range3;
+		var range4;
+		var range5;
+
+
+	}
+	
+
+
 
 	initialize();
 
@@ -239,12 +250,8 @@ function initialize(){
 		var mapOptions = {
 			center: {lat: 40.524, lng: -97.884},
 			zoom: 4,
-
 			scrollwheel: false
-			
-
-			
-
+		
 		}
 
 	// };
@@ -255,6 +262,7 @@ function initialize(){
 	geocoder = new google.maps.Geocoder();
 	matrix = new google.maps.DistanceMatrixService();
 
+	//prevents map from scrolling down unless clicked first.
 	 map.addListener('click', function()
 	   { 
 	  	  if(map) map.setOptions({ scrollwheel: true }); 
@@ -281,7 +289,7 @@ function create_search_array(){
 }
 
 
-function performSearch(text_request, callback){
+function performSearch(text_request, rank, callback){
 	//Location box should be dynamic and set based on the users location or input
 	// var locationBox = 
 
@@ -300,6 +308,7 @@ function performSearch(text_request, callback){
 	// }
 	// service.textSearch(text_request,latLngArr)
 
+
 	service.textSearch(text_request, function(results,status){
 		var searchResults =[];
 		if(status == google.maps.places.PlacesServiceStatus.OK){
@@ -307,7 +316,8 @@ function performSearch(text_request, callback){
 				searchResults.push({
 					name:results[i].name,
 					lat:results[i].geometry.location.lat(),
-					lng:results[i].geometry.location.lng()
+					lng:results[i].geometry.location.lng(),
+					rank: rank,
 				});
 			};
 			callback(searchResults);
@@ -342,7 +352,6 @@ function getDistance(arr,origin,callback){
 	    // avoidTolls: false,
 	},function(response,status){
 		if (status == google.maps.DistanceMatrixStatus.OK) {
-			console.log(response);
 			//there is only one origin point so we hard code the first element into var results
 		    var results = response.rows[0].elements;
 		    //next we iterate through the destination results and store all distance values into
