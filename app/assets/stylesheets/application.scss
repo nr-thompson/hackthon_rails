@@ -44,6 +44,8 @@ html {
 	color:white;
 	margin-top: 180px;
 	font-size: 80px;
+	padding-top: 8%;
+
 
 }
 .banner1_text2 {
@@ -66,8 +68,14 @@ html {
 .background_image {
 	background: rgba(0, 0,0, 0.55);
 	height: 100vh;
-	min-height: 600px;
+	min-height: 600px
+
 }
+
+/*.banner1_text {
+	color: #dd3928 !important;
+	padding-top: 30%;
+}*/
 
 .banner2 {
 	background-color: whitesmoke;
