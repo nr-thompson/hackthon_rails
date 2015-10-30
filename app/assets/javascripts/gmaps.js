@@ -162,7 +162,7 @@ $(document).ready(function(){
 					case "food":
 					//block
 						break;
-					case "culture"
+					case "culture":
 						break;
 					case "shopping":
 					//block
@@ -203,7 +203,7 @@ $(document).ready(function(){
 		console.log(distribution);
 	}
 
-	function filterDistances
+	// function filterDistances
 	
 
 
