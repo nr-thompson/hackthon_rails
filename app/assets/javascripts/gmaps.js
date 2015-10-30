@@ -408,14 +408,11 @@ $(document).ready(function(){
 			//sends each category to be searched
 			getResults(ranking,current_location);
 			// infowindow.open(map, marker);
-
-		});	
-		
-    });
+		});
+	}
 	function showScore(score){
 		infowindow.open(map, marker);
 		infowindow.setContent("<h1>"+score+"</h1>")
-
 	}
 
 });
