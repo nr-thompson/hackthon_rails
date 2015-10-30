@@ -352,9 +352,9 @@ $(document).ready(function(){
 		
     });
 	function showScore(score){
-			infowindow.open(map, marker);
-			infowindow.setContent("<h1>"+score+"</h1>")
-		}
+		infowindow.open(map, marker);
+		infowindow.setContent("<h1>"+score+"</h1>")
+	}
 
 });
 
