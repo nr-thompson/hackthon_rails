@@ -49,6 +49,10 @@ group :development, :test do
 end
 
 group :production do
+<<<<<<< HEAD
+=======
+  gem 'pg','0.17.1'
+>>>>>>> 422283f1c429bebf955cc669e3274a5a5a1199af
   gem 'rails_12factor', '0.0.2'
 end
 

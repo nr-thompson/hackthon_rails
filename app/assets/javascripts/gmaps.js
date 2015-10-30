@@ -252,6 +252,7 @@ $(document).ready(function(){
 		total = Math.round(total);
 		showScore(total);
 	}
+
 	function distanceVal(distance){
 		var value = 0
 		if (distance < 482){
@@ -272,6 +273,7 @@ $(document).ready(function(){
 	
 		return value;	
 	}
+
 	initialize();
 	var current_location;
 
@@ -302,6 +304,7 @@ $(document).ready(function(){
 			window.alert("Autocomplete's returned place contains no geometry");
 			return;
 	    }
+
 
 	    // If the place has a geometry, then present it on a map.
 		if (place.geometry.viewport) {
@@ -368,6 +371,51 @@ $(document).ready(function(){
 
 	    }));
 
+
+
+	    // If the place has a geometry, then present it on a map.
+		if (place.geometry.viewport) {
+			map.fitBounds(place.geometry.viewport);
+		} else {
+			map.setCenter(place.geometry.location);
+			map.setZoom(13);  // Why 13? Because it looks good.
+		}
+		marker.setIcon(/** @type {google.maps.Icon} */({
+			url: "http://content.sportslogos.net/logos/6/235/full/5gzur7f6x09cv61jt16smhopl.gif", 
+			size: new google.maps.Size(71, 71),
+			origin: new google.maps.Point(0, 0),
+			anchor: new google.maps.Point(17, 34),
+			scaledSize: new google.maps.Size(35, 35)
+		}));
+
+	    marker.setPosition(place.geometry.location);
+	    marker.setVisible(true);
+
+	    var address = '';
+	    if (place.address_components) {
+	      address = [
+	        (place.address_components[0] && place.address_components[0].short_name || ''),
+	        (place.address_components[1] && place.address_components[1].short_name || ''),
+	        (place.address_components[2] && place.address_components[2].short_name || '')
+	      ].join(' ');
+	    }
+
+	    // infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address + '<br>' + '<strong>' +  "Latitude: " + '</strong>' + latitude + '<strong>' +  "  Longitude:  " + '</strong>' +longitude)
+	    // infowindow.open(map, marker);
+	    $( "#interest" ).click(function(){
+			//grabs rankings of each category
+			var ranking = create_search_array();
+			//sends each category to be searched
+			getResults(ranking,current_location);
+			// infowindow.open(map, marker);
+
+		});	
+		
+    });
+	function showScore(score){
+		infowindow.open(map, marker);
+		infowindow.setContent("<h1>"+score+"</h1>")
+
 	}
 
 });
@@ -394,7 +442,7 @@ function initialize(){
 			center: {lat: 40.524, lng: -97.884},
 			zoom: 4,
 			scrollwheel: false
-	
+
 		}
 
 	// };
