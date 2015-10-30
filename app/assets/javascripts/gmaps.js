@@ -9,24 +9,24 @@ $(document).ready(function(){
 	//sends a different search obj depending on the ctegory. callback is sent to getAllDistances
 	function getResults(ranking,current_location){
 		var results = [];
-		for (var i = 0;i<1/*ranking.length*/;i++){
+		for (var i = 0;i<2/*ranking.length*/;i++){
 			switch(ranking[i].category){
 				case "food":
 					var searchObj = {
-						query: "resaurants, food, cafe,",
+						query: "food restaurant",
 						location:current_location,
 						radius: 1000,
-						types:["restaurant"],
+						types:["restaurant","bakery","cafe","food","meal_delivery"
+						,"meal_takeaway"],
 					}
 					performSearch(searchObj,(i+1),"food",function(params){
 						results.push(params);
-						if(results.length == 1){
+						if(results.length == 2){
 							getAllDistances(results);
 						}
 					})
 					break;
 				case "culture":
-					//block
 					var searchObj = {
 						query: "museum",
 						location: current_location,
@@ -35,7 +35,7 @@ $(document).ready(function(){
 					}
 					performSearch(searchObj,(i+1),"culture",function(params){
 						results.push(params);
-						if(results.length == 1){
+						if(results.length == 2){
 							getAllDistances(results);
 						}
 					})
@@ -50,7 +50,7 @@ $(document).ready(function(){
 					}
 					performSearch(searchObj,(i+1),"shopping", function(params){
 						results.push(params);
-						if(results.length == 1){
+						if(results.length == 2){
 							getAllDistances(results);
 						}
 					})
@@ -65,7 +65,7 @@ $(document).ready(function(){
 					}
 					performSearch(searchObj,(i+1),"health",function(params){
 						results.push(params);
-						if(results.length == 1){
+						if(results.length == 2){
 							getAllDistances(results);
 						}
 					})
@@ -80,7 +80,7 @@ $(document).ready(function(){
 					}
 					performSearch(searchObj,(i+1),"transportation",function(params){
 						results.push(params);
-						if(results.length == 1){
+						if(results.length == 2){
 							getAllDistances(results);
 						}
 					})
@@ -95,7 +95,7 @@ $(document).ready(function(){
 					}
 					performSearch(searchObj,(i+1),"nightlife",function(params){
 						results.push(params);
-						if(results.length == 1){
+						if(results.length == 2){
 							getAllDistances(results);
 						}
 					})
@@ -110,7 +110,7 @@ $(document).ready(function(){
 					}
 					performSearch(searchObj,(i+1),"faith",function(params){
 						results.push(params);
-						if(results.length == 1){
+						if(results.length == 2){
 							getAllDistances(results);
 						}
 					})
@@ -129,7 +129,7 @@ $(document).ready(function(){
 		for(var i = 0;i<results.length;i++){
 			getDistance(results[i],current_location,function(params){
 				distanceArr.push(params)
-				if(distanceArr.length == 1){
+				if(distanceArr.length == 2){
 					remove_far(distanceArr);
 				}
 			})
@@ -149,61 +149,116 @@ $(document).ready(function(){
 			}
 			filtered.push(temp);
 		}
-		console.log(filtered)
-		// calculateScore(filtered)
+		// console.log(filtered)
+		category_score(filtered)
 	}
 
-	function calculateScore(arr,callback){
-		var distribution = [];
-
+	function category_score(arr,callback){
+		//the first index of each array will keep track of the score total, while the 
+		//second index being pushed into will keep track of the rank
+		var sums = {
+			food: [0],
+			culture: [0],
+			shopping: [0],
+			health: [0],
+			transportation: [0],
+			nightlife: [0],
+			faith: [0], 
+		}
 		for (var i = 0;i<arr.length;i++){
 			for(var j = 0;j<arr[i].length;j++){
+
 				switch (arr[i][j].category){
 					case "food":
-					//block
+						sums.food[0] += distanceVal(arr[i][j].distance)
+						if(!sums.food[1]){
+							sums.food.push(arr[i][j].rank)
+						}
+					
 						break;
-					case "culture"
+					case "culture":
+						sums.culture[0] += distanceVal(arr[i][j].distance)
+						if(!sums.culture[1]){
+							sums.culture.push(arr[i][j].rank)
+						}
 						break;
-					case "shopping":
-					//block
-						break;
-					case "health":
-					//block
-						break;
-					case "transportation":
-					//block
-						break;
-					case "nightlife":
-					//block
-						break;
-					case "faith":
-					//block
-						break;
+					// case "shopping":
+					// //block
+					// 	break;
+					// case "health":
+					// //block
+					// 	break;
+					// case "transportation":
+					// //block
+					// 	break;
+					// case "nightlife":
+					// //block
+					// 	break;
+					// case "faith":
+					// //block
+					// 	break;
 					default:
 						return;
 				}
-				if (arr[i][j].distance < 804){
-					distribution.range1.push(arr[i][j]);
-				}
-				else if (arr[i][j].distance < 1609){
-					distribution.range2.push(arr[i][j]);
-				}
-				else if (arr[i][j].distance < 2414){
-					distribution.range3.push(arr[i][j])
-				}
-				else if (arr[i][j].distance < 3201){
-					distribution.range4.push(arr[i][j])
-				}
-				else{
-					distribution.range5.push(arr[i][j])
-				}
+				
 			}
 		}
-
-		console.log(distribution);
+		console.log(sums)
+		weighted_score(sums);
 	}
 
-	function filterDistances
+	function weighted_score(sums){
+		//checks the second index for the rank of the category and multiplies it
+		//to corresponding multiplier
+		var total = 0
+		for(key in sums){
+			if(sums[key][1] == 1){
+				total += sums[key][0] * 0.2254
+			}
+			else if(sums[key][1] == 2){
+				total += sums[key][0] * 0.1979
+			}
+			else if(sums[key][1] == 3){
+				total += sums[key][0] * 0.1703
+			}
+			else if(sums[key][1] == 4){
+				total += sums[key][0] * 0.1428
+			}
+			else if(sums[key][1] == 5){
+				total += sums[key][0] * 0.1153
+			}
+			else if(sums[key][1] == 6){
+				total += sums[key][0] * 0.0879
+			}
+			else if(sums[key][1] == 7){
+				total += sums[key][0] * 0.0604
+			}
+		}
+		total = Math.round(total);
+
+	}
+
+
+	function distanceVal(distance){
+		var value = 0
+		if (distance < 482){
+			value = 5
+		}
+		else if (distance < 1209){
+			value = 4
+		}
+		else if (distance < 1814){
+			value = 3
+		}
+		else if (distance < 2401){
+			value = 2
+		}
+		else{
+			value = 1
+		};
+	
+		return value;	
+	}
 	
 
 
