@@ -4,7 +4,7 @@ $(document).ready(function(){
 	//sends a different search obj depending on the ctegory. callback is sent to getAllDistances
 	function getResults(ranking,current_location){
 		var results = [];
-		for (var i = 0;i<2/*ranking.length*/;i++){
+		for (var i = 0;i<5/*ranking.length*/;i++){
 			switch(ranking[i].category){
 				case "food":
 					var searchObj = {
@@ -16,21 +16,23 @@ $(document).ready(function(){
 					}
 					performSearch(searchObj,(i+1),"food",function(params){
 						results.push(params);
-						if(results.length == 2){
+						if(results.length == 5
+							){
 							getAllDistances(results);
 						}
 					})
 					break;
 				case "culture":
 					var searchObj = {
-						query: "museum",
+						query: "museum art",
 						location: current_location,
 						radius: 1000,
-						types:["museum"],
+						types:["museum","aquarium","art_gallery","library",],
 					}
 					performSearch(searchObj,(i+1),"culture",function(params){
 						results.push(params);
-						if(results.length == 2){
+						if(results.length == 5
+							){
 							getAllDistances(results);
 						}
 					})
@@ -38,14 +40,15 @@ $(document).ready(function(){
 				case "shopping":
 					//block
 					var searchObj = {
-						query: "shopping mall",
+						query: "shopping",
 						location: current_location,
 						radius: 1000,
-						types:["shopping_mall"],
+						types:["shopping_mall","car_dealer","convenience_store","clothing_store", "department_store", "shoe_store","jewelry_store"],
 					}
 					performSearch(searchObj,(i+1),"shopping", function(params){
 						results.push(params);
-						if(results.length == 2){
+						if(results.length == 5
+							){
 							getAllDistances(results);
 						}
 					})
@@ -53,14 +56,15 @@ $(document).ready(function(){
 				case "health":
 					//block
 					var searchObj = {
-						query:"park",
+						query:"park gym health",
 						location:current_location,
 						radius: 1000,
-						types:["park"],
+						types:["park","gym","doctor","health","hospital","pharmacy"],
 					}
 					performSearch(searchObj,(i+1),"health",function(params){
 						results.push(params);
-						if(results.length == 2){
+						if(results.length == 5
+							){
 							getAllDistances(results);
 						}
 					})
@@ -68,14 +72,15 @@ $(document).ready(function(){
 				case "transportation":
 					//block
 					var searchObj = {
-						query: "bus station",
+						query: "transportation ",
 						location: current_location,
 						radius: 1000,
-						types:["bus_station"],
+						types:["bus_station","subway_station","train_station","airport","taxi_stand"],
 					}
 					performSearch(searchObj,(i+1),"transportation",function(params){
 						results.push(params);
-						if(results.length == 2){
+						if(results.length == 5
+							){
 							getAllDistances(results);
 						}
 					})
@@ -83,14 +88,15 @@ $(document).ready(function(){
 				case "nightlife":
 					//block
 					var searchObj = {
-						query: "nightclub",
+						query: "club bar",
 						location:current_location,
 						radius:1000,
-						types:["night_club"],
+						types:["night_club","bar","movie_theater"],
 					}
 					performSearch(searchObj,(i+1),"nightlife",function(params){
 						results.push(params);
-						if(results.length == 2){
+						if(results.length == 5
+							){
 							getAllDistances(results);
 						}
 					})
@@ -101,11 +107,12 @@ $(document).ready(function(){
 						query:"church",
 						location:current_location,
 						radius:1000,
-						types:["church"],
+						types:["church","mosque","synagogue","hindu_temple","place_of_worship"],
 					}
 					performSearch(searchObj,(i+1),"faith",function(params){
 						results.push(params);
-						if(results.length == 2){
+						if(results.length == 5
+							){
 							getAllDistances(results);
 						}
 					})
@@ -124,7 +131,8 @@ $(document).ready(function(){
 		for(var i = 0;i<results.length;i++){
 			getDistance(results[i],current_location,function(params){
 				distanceArr.push(params)
-				if(distanceArr.length == 2){
+				if(distanceArr.length == 5
+					){
 					remove_far(distanceArr);
 				}
 			})
@@ -176,21 +184,36 @@ $(document).ready(function(){
 							sums.culture.push(arr[i][j].rank)
 						}
 						break;
-					// case "shopping":
-					// //block
-					// 	break;
-					// case "health":
-					// //block
-					// 	break;
-					// case "transportation":
-					// //block
-					// 	break;
-					// case "nightlife":
-					// //block
-					// 	break;
-					// case "faith":
-					// //block
-					// 	break;
+					case "shopping":
+						sums.shopping[0] += distanceVal(arr[i][j].distance)
+						if(!sums.shopping[1]){
+							sums.shopping.push(arr[i][j].rank)
+						}
+						break;
+					case "health":
+						sums.health[0] += distanceVal(arr[i][j].distance)
+						if(!sums.health[1]){
+							sums.health.push(arr[i][j].rank)
+						}
+						break;
+					case "transportation":
+						sums.transportation[0] += distanceVal(arr[i][j].distance)
+						if(!sums.transportation[1]){
+							sums.transportation.push(arr[i][j].rank)
+						}
+						break;
+					case "nightlife":
+						sums.nightlife[0] += distanceVal(arr[i][j].distance)
+						if(!sums.nightlife[1]){
+							sums.nightlife.push(arr[i][j].rank)
+						}
+						break;
+					case "faith":
+						sums.faith[0] += distanceVal(arr[i][j].distance)
+						if(!sums.faith[1]){
+							sums.faith.push(arr[i][j].rank)
+						}
+						break;
 					default:
 						return;
 				}
