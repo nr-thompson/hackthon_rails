@@ -1,20 +1,20 @@
 
 <div class="banner">
 	<div class="background_image">
-	<%= current_user %>
+		<%= current_user %>
 		<div class="section no-pad-bot" id="index-banner">
-		<div class="container">
-		<br><br>
+			<div class="container">
+				<br><br>
 
-			<h1 class="header center banner_title"><strong>Get Your Score</strong></h1>
+				<h1 class="header center banner_title"><strong>Get Your Score</strong></h1>
 				<div class="row center">
 					<h5 class="header col s12 light banner_text2">Use our scoring system to find a location that aligns with your interests.</h5>
 				</div>
 				<div class="row center">
-					<a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light orange">Get Started</a>
+					<a href="#bacon" class="btn-large waves-effect waves-light orange">Get Started</a>
 				</div>
-		<br><br>
-		</div>
+				<br><br>
+			</div>
 		</div>
 	</div>    <!-- background image -->
 </div>  <!-- end of banner 1 -->
@@ -22,16 +22,16 @@
 <!-- start of banner 2 -->
 <hr>
 <div class="container">
-  <h3>Your score is..!</h3>
-  <p>dynamic banner will go here</p>
+	<h3>Your score is..!</h3>
+	<p>dynamic banner will go here</p>
 </div>
 <hr>
 <div class="row">
 	<div class="col s3">
 		<p>Rank your interests from highest to lowest and find out your walking score.</p>
-	<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+		<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
 
-		<div class="test_guy">
+		<div class="test_guy" name="bacon">
 			<!-- <ul>
 			  <li id="draggable" class="ui-state-highlight">Drag me down</li>
 			</ul> -->
@@ -47,13 +47,14 @@
 				<li class="ui-state-default"><span class=" categories ui-icon ui-icon-arrowthick-2-n-s" name="nightlife"></span>Nightlife</li>
 				<li class="ui-state-default"><span class=" categories ui-icon ui-icon-arrowthick-2-n-s" name="faith"></span>Faith</li>
 			</ul>
-				<input type="submit" id="interest">
+			<input type="submit" id="interest">
 		</div>
 	</div>
 
 	<div class="col s9">
 
 		<div id="map-canvas">
+
 			
 		</div>
 		<input type="submit" value="testing" class="test">
@@ -62,25 +63,40 @@
 
 
 
- <script>
- $(document).ready(function(){
-  $(function() {
-    $( "#sortable" ).sortable({
-      revert: true
-    });
-    $( "#draggable" ).draggable({
-      connectToSortable: "#sortable",
-      helper: "clone",
-      revert: "invalid"
-    });
-    $( "ul", "li" ).disableSelection();
-  });
-
+<script>
+$(document).ready(function(){
+	$(function() {
+		$( "#sortable" ).sortable({
+			revert: true
+		});
+		$( "#draggable" ).draggable({
+			connectToSortable: "#sortable",
+			helper: "clone",
+			revert: "invalid"
+		});
+		$( "ul", "li" ).disableSelection();
+	});
+	$("a").click(function(){
+		if(this.hash) {
+			var hash = this.hash.substr(1);
+			var $toElement = $("*[name="+hash+"]");
+			var toPosition = $toElement.position().top;
+			$("body,html").animate({
+				scrollTop : toPosition
+			}, 2000,"easeOutExpo");
+			return false;
+		}
+		if(location.hash) {
+			var hash = location.hash;
+			window.scroll(0,0);
+			$("a[href="+hash+"]").click();
+		}
+	});
 
 });
 
 
-  </script>
+</script>
 
 <!-- 
 
@@ -127,4 +143,4 @@
 		</div>
 	</form>
 
- -->
+-->

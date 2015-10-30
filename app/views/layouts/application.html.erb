@@ -6,6 +6,7 @@
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
+
   <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"> -->
 
   <!-- Compiled and minified CSS -->
@@ -38,7 +39,7 @@
             <div class="logo modal-content">
               <h1>login form</h1>
 
-              <form action="/users" method="post">
+              <form action="/sessions" method="post">
                 <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
                 
                 <input type="text" name='user[email]'>
@@ -82,14 +83,14 @@
           </div>
         </li>
       </ul>
-      <% if flash[:errors] %>
-      <% flash[:errors].each do |e| %>
-      <p><%= e %></p>
-      <% end %>
-      <% end %>
+      
     </div>
   </nav>
-
+  <% if flash[:errors] %>
+  <% flash[:errors].each do |e| %>
+  <p><%= e %></p>
+  <% end %>
+  <% end %>
 
 
   <% if current_user %>
