@@ -18,8 +18,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["restaurant"],
 					}
-					performSearch(searchObj,(i+1),function(params){
-						console.log(params)
+					performSearch(searchObj,(i+1),"food",function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -34,7 +33,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["museum"],
 					}
-					performSearch(searchObj,(i+1),function(params){
+					performSearch(searchObj,(i+1),"culture",function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -49,7 +48,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["shopping_mall"],
 					}
-					performSearch(searchObj,(i+1),function(params){
+					performSearch(searchObj,(i+1),"shopping", function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -64,7 +63,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["park"],
 					}
-					performSearch(searchObj,(i+1),function(params){
+					performSearch(searchObj,(i+1),"health",function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -79,7 +78,7 @@ $(document).ready(function(){
 						radius: 1000,
 						types:["bus_station"],
 					}
-					performSearch(searchObj,(i+1),function(params){
+					performSearch(searchObj,(i+1),"transportation",function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -94,7 +93,7 @@ $(document).ready(function(){
 						radius:1000,
 						types:["night_club"],
 					}
-					performSearch(searchObj,(i+1),function(params){
+					performSearch(searchObj,(i+1),"nightlife",function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -109,7 +108,7 @@ $(document).ready(function(){
 						radius:1000,
 						types:["church"],
 					}
-					performSearch(searchObj,(i+1),function(params){
+					performSearch(searchObj,(i+1),"faith",function(params){
 						results.push(params);
 						if(results.length == 1){
 							getAllDistances(results);
@@ -144,23 +143,67 @@ $(document).ready(function(){
 			var temp = [];
 			for(var j=0;j<results[i].length;j++){
 				if(results[i][j].distance <= 8000){
+					
 					temp.push(results[i][j]);
 				}
 			}
 			filtered.push(temp);
 		}
-		calculateScore(filtered)
+		console.log(filtered)
+		// calculateScore(filtered)
 	}
 
-	function calculateScore(arr){
-		var range1;
-		var range2;
-		var range3;
-		var range4;
-		var range5;
+	function calculateScore(arr,callback){
+		var distribution = [];
 
+		for (var i = 0;i<arr.length;i++){
+			for(var j = 0;j<arr[i].length;j++){
+				switch (arr[i][j].category){
+					case "food":
+					//block
+						break;
+					case "culture"
+						break;
+					case "shopping":
+					//block
+						break;
+					case "health":
+					//block
+						break;
+					case "transportation":
+					//block
+						break;
+					case "nightlife":
+					//block
+						break;
+					case "faith":
+					//block
+						break;
+					default:
+						return;
+				}
+				if (arr[i][j].distance < 804){
+					distribution.range1.push(arr[i][j]);
+				}
+				else if (arr[i][j].distance < 1609){
+					distribution.range2.push(arr[i][j]);
+				}
+				else if (arr[i][j].distance < 2414){
+					distribution.range3.push(arr[i][j])
+				}
+				else if (arr[i][j].distance < 3201){
+					distribution.range4.push(arr[i][j])
+				}
+				else{
+					distribution.range5.push(arr[i][j])
+				}
+			}
+		}
 
+		console.log(distribution);
 	}
+
+	function filterDistances
 	
 
 
@@ -289,7 +332,7 @@ function create_search_array(){
 }
 
 
-function performSearch(text_request, rank, callback){
+function performSearch(text_request, rank, category, callback){
 	//Location box should be dynamic and set based on the users location or input
 	// var locationBox = 
 
@@ -318,6 +361,7 @@ function performSearch(text_request, rank, callback){
 					lat:results[i].geometry.location.lat(),
 					lng:results[i].geometry.location.lng(),
 					rank: rank,
+					category: category,
 				});
 			};
 			callback(searchResults);
