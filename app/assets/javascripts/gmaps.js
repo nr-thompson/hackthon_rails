@@ -243,7 +243,7 @@ function initialize(){
 			scrollwheel: false
 			
 
-			scrollwheel:false,
+			
 
 		}
 
