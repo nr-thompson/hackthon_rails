@@ -170,23 +170,6 @@ $(document).ready(function(){
 
 				switch (arr[i][j].category){
 					case "food":
-
-					//block
-						break;
-					case "culture":
-						break;
-					case "shopping":
-					//block
-						break;
-					case "health":
-					//block
-						break;
-					case "transportation":
-					//block
-						break;
-					case "nightlife":
-					//block
-
 						sums.food[0] += distanceVal(arr[i][j].distance)
 						if(!sums.food[1]){
 							sums.food.push(arr[i][j].rank)
