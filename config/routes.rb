@@ -16,10 +16,6 @@ Rails.application.routes.draw do
   ##### end of omniauth routes ######
 
 
-  ##### Routes for Login ######
-  get "/users/login" => "users#login"
-  
-  ##### end of login routes ######
 
   post '/interests' => 'interests#create'
 end

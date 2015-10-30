@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
 		@user = User.find_by(email: params[:email])
 		if @user && @user.authenticate(params[:password])
 			log_in @user
-			puts "good"
+
 			redirect_to "/home"
 		else
 			flash[:notice] = "Invalid"
