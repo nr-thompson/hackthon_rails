@@ -17,6 +17,25 @@ class UsersController < ApplicationController
 		end
 	end
 
+	def login
+		User.find(session[:user_id]) if session[:user_id]
+		
+		# authorized_user = User.authenticate(params[:email],params[:password])
+		# if authorized_user
+		# 	session[:user_id] = authorized_user.id
+		# 	redirect_to "/home"
+		# else
+		# 	flash[:notice] = "Email or password is incorrect"
+		# 	redirect_to "/home"
+		# end
+	end
+
+	def destroy
+		session[:user_id] = nil
+		flash[:notice] = "Logged out"
+		redirect_to "/home"
+	end
+
 
 	private
 	def user_params

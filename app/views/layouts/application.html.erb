@@ -32,19 +32,34 @@
         <!-- Modal Trigger -->
         <li><a class="logo btn modal-trigger" href="#modal1">Login</a>
 
-        <!-- Modal Structure -->
-        <div id="modal1" class="modal modal-fixed-footer">
-          <div class="logo modal-content">
-                <h1>login/signup form</h1>
-          </div>
-          <div class="modal-footer">
-            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Login</a>
-          </div>
-        </div></li>
-        <li><a href="">Sign Up</a></li>
-      </ul>
-    </div>
-  </nav>
+          <!-- Modal Structure -->
+          <div id="modal1" class="modal modal-fixed-footer">
+            <div class="logo modal-content">
+              <h1>login/signup form</h1>
+
+              <form action="/users" method="post">
+                <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+                <label for='email'>Email</label>
+                <input type="text" name='user[email]'>
+                <label for='password'>Password</label>
+                <input type="password" name='user[password]'>
+              </form>
+              <% if flash[:errors] %>
+              <% flash[:errors].each do |e| %>
+              <p><%= e %></p>
+              <% end %>
+              <% end %>
+
+            </div>
+            <div class="modal-footer">
+              <a href="/users/login" class=" modal-action modal-close waves-effect waves-green btn-flat">Login</a>
+              <a href="/auth/facebook" class="modal-action modal-close waves-effect waves-green btn-flat">Login with Facebook</a>
+            </div>
+          </div></li>
+          <li><a href="">Sign Up</a></li>
+        </ul>
+      </div>
+    </nav>
         
 
 <% if flash[:errors] %>
